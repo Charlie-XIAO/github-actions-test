@@ -64,13 +64,13 @@ jobs:
           # Assemble the command
           command="python build_tools/update_environments_and_lock_files.py"
           if [[ -n $select_tag ]]; then
-            command+="--select-tag \"$select_tag\""
+            command+=" --select-tag \"$select_tag\""
           fi
           if [[ -n $select_build ]]; then
-            command+="--select-build \"$select_build\""
+            command+=" --select-build \"$select_build\""
           fi
           if [[ -n $skip_build ]]; then
-            command+="--skip-build \"$skip_build\""
+            command+=" --skip-build \"$skip_build\""
           fi
 
           echo "$command" >> files/update-lock-files.txt
