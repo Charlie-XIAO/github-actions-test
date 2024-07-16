@@ -8,3 +8,4 @@ python build_tools/update_environments_and_lock_files.py --select-build doc --sk
 python build_tools/update_environments_and_lock_files.py --select-tag main-ci --select-build something
 python build_tools/update_environments_and_lock_files.py
 python build_tools/update_environments_and_lock_files.py
+python build_tools/update_environments_and_lock_files.py
