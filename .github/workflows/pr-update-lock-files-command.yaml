@@ -44,6 +44,8 @@ jobs:
             echo "command=$command" >> $GITHUB_OUTPUT
           fi
 
+          echo "$command"
+
       - name: Get PR HEAD ref
         if: ${{ steps.parse-comment.outputs.is_valid == '1' }}
         id: pr-head-ref
@@ -61,9 +63,7 @@ jobs:
         if: ${{ steps.parse-comment.outputs.is_valid == '1' }}
         env:
           COMMAND: ${{ steps.parse-comment.outputs.command }}
-        run: |
-          chmod +x ./scripts/pr_update_lock_files.sh
-          $COMMAND
+        run: $COMMAND
 
       - name: Commit changes
         if: ${{ steps.parse-comment.outputs.is_valid == '1' }}
