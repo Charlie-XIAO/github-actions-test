@@ -1,2 +1,4 @@
-Test file for `.github/workflows/pr-hello-world-command.yaml`
+Test for pr-hello-world-command.yaml
 ---
+Hello, @Charlie-XIAO
+Hello, @ROMEEZHOU
