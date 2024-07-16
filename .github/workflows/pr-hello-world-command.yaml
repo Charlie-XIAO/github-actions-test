@@ -1,0 +1,28 @@
+name: pr-hello-world-command
+on:
+  issue_comment:
+    types: [created, edited]
+
+jobs:
+  hello-world:
+    if: >-
+      github.event.issue.pull_request
+      && startsWith(github.event.comment.body, "/hello-world")
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.issue.pull_request.head.sha }}
+
+      - name: Append hello world
+        run: echo "Hello, @${{ github.event.sender }}" >> hello-world.txt
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "actions-bot"
+          git config --global user.email "58130806+actions-bot@users.noreply.github.com"
+          git add -A
+          git commit -m "[pr-hello-world-command] Hello response added!"
+          git push
