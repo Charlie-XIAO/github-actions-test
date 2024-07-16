@@ -4,3 +4,4 @@ python build_tools/update_environments_and_lock_files.py --select-build doc$
 python build_tools/update_environments_and_lock_files.py--select-build doc$
 python build_tools/update_environments_and_lock_files.py --select-tag main-ci
 python build_tools/update_environments_and_lock_files.py --select-build doc except build doc$ --select-environment doc$
+python build_tools/update_environments_and_lock_files.py --select-build doc --skip-build doc$
