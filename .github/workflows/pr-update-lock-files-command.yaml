@@ -15,37 +15,54 @@ jobs:
         id: parse-comment
         run: |
           first_line=$(echo "${{ github.event.comment.body }}" | head -n 1)
-          args=""
+          command="python build_tools/update_environments_and_lock_files.py"
+          is_valid=0
 
-          if [[ "$first_line" =~ for\ tag\ \`([^\`]+)\` ]]; then
-            args+=" --select-tag ${BASH_REMATCH[1]}"
+          if [[ $first_line == "please update lock-files all" ]]; then
+            is_valid=1
+          else
+            select_tag=$(echo "$first_line" | grep -oP '\[tag \K[^]]+')
+            select_build=$(echo "$first_line" | grep -oP '\[build \K[^]]+')
+            skip_build=$(echo "$first_line" | grep -oP '\[-build \K[^]]+')
+
+            if [[ -n $select_tag || -n $select_build || -n $skip_build ]]; then
+              is_valid=1
+              if [[ -n $select_tag ]]; then
+                command+=" --select-tag $select_tag"
+              fi
+              if [[ -n $select_build ]]; then
+                command+=" --select-build $select_build"
+              fi
+              if [[ -n $skip_build ]]; then
+                command+=" --skip-build $skip_build"
+              fi
+            fi
           fi
 
-          if [[ "$first_line" =~ for\ build\ \`([^\`]+)\` ]]; then
-            args+=" --select-build ${BASH_REMATCH[1]}"
+          echo "is_valid=$is_valid" >> $GITHUB_OUTPUT
+          if [[ $is_valid -eq 1 ]]; then
+            echo "update_script_args=$command" >> $GITHUB_OUTPUT
           fi
-
-          if [[ "$first_line" =~ except\ build\ \`([^\`]+)\` ]]; then
-            args+=" --skip-build ${BASH_REMATCH[1]}"
-          fi
-
-          echo "update_script_args=$args" >> $GITHUB_OUTPUT
 
       - name: Get PR HEAD ref
+        if: ${{ steps.parse-comment.outputs.is_valid == '1' }}
         id: pr-head-ref
         run: echo "pr_head_ref=$(gh pr view ${{ github.event.issue.number }} --repo ${{ github.repository }} --json headRefName | jq -r '.headRefName')" >> $GITHUB_OUTPUT
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check out the code
+        if: ${{ steps.parse-comment.outputs.is_valid == '1' }}
         uses: actions/checkout@v4
         with:
           ref: ${{ steps.pr-head-ref.outputs.pr_head_ref }}
 
       - name: Append the command name
-        run: echo "python build_tools/update_environments_and_lock_files.py${{ steps.parse-comment.outputs.update_script_args }}" >> files/update-lock-files.txt
+        if: ${{ steps.parse-comment.outputs.is_valid == '1' }}
+        run: echo "${{ steps.parse-comment.outputs.update_script_args }}" >> files/update-lock-files.txt
 
       - name: Commit changes
+        if: ${{ steps.parse-comment.outputs.is_valid == '1' }}
         run: |
           git config --global user.name "actions-bot"
           git config --global user.email "58130806+actions-bot@users.noreply.github.com"
