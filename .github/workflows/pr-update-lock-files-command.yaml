@@ -57,9 +57,9 @@ jobs:
       - name: Run the command
         if: ${{ steps.parse-comment.outputs.is_valid == '1' }}
         run: |
-          select_tag = ${{ steps.parse-comment.outputs.select_tag }}
-          select_build = ${{ steps.parse-comment.outputs.select_build }}
-          skip_build = ${{ steps.parse-comment.outputs.skip_build }}
+          select_tag=${{ steps.parse-comment.outputs.select_tag }}
+          select_build=${{ steps.parse-comment.outputs.select_build }}
+          skip_build=${{ steps.parse-comment.outputs.skip_build }}
 
           # Assemble the command
           command="python build_tools/update_environments_and_lock_files.py"
