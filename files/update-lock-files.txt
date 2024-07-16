@@ -12,3 +12,4 @@ python build_tools/update_environments_and_lock_files.py
 python build_tools/update_environments_and_lock_files.py
 python build_tools/update_environments_and_lock_files.py
 python build_tools/update_environments_and_lock_files.py --select-tag some tag that can contain spaces and even quotes --select-build some tag that can contain spaces and even quotes --skip-build some tag that can contain spaces and even quotes
+python build_tools/update_environments_and_lock_files.py --select-tag main-ci --select-build a b c --skip-build doc_min_dependencies
