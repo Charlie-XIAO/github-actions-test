@@ -17,16 +17,16 @@ jobs:
           first_line=$(echo "${{ github.event.comment.body }}" | head -n 1)
           args=""
 
-          if [[ "$first_line" =~ for\ tag\ (.+) ]]; then
+          if [[ "$first_line" =~ for\ tag\ ([^\ ]+) ]]; then
             args+=" --select-tag ${BASH_REMATCH[1]}"
           fi
 
-          if [[ "$first_line" =~ for\ build\ (.+) ]]; then
+          if [[ "$first_line" =~ for\ build\ ([^\ ]+) ]]; then
             args+=" --select-build ${BASH_REMATCH[1]}"
           fi
 
-          if [[ "$first_line" =~ except\ build\ (.+) ]]; then
-            args+=" --select-environment ${BASH_REMATCH[1]}"
+          if [[ "$first_line" =~ except\ build\ ([^\ ]+) ]]; then
+            args+=" --skip-build ${BASH_REMATCH[1]}"
           fi
 
           echo "update_script_args=$args" >> $GITHUB_OUTPUT
