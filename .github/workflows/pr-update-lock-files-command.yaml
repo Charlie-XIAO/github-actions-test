@@ -14,22 +14,12 @@ jobs:
       - name: Parse comment
         id: parse-comment
         run: |
-          COMMENT="${{ github.event.comment.body }}"
-          ARGS=""
-
-          if [[ "$COMMENT" =~ for\ tag\ ([^\ ]+) ]]; then
-            ARGS+=" --select-tag ${BASH_REMATCH[1]}"
+          first_line=$(echo "${{ github.event.comment.body }}" | head -n 1)
+          if [[ "$first_line" =~ ^please\ update\ lock-files\ (.+)$ ]]; then
+            echo "update_script_args=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
+          else
+            echo "update_script_args=" >> $GITHUB_OUTPUT
           fi
-
-          if [[ "$COMMENT" =~ for\ build\ ([^\ ]+) ]]; then
-            ARGS+=" --select-build ${BASH_REMATCH[1]}"
-          fi
-
-          if [[ "$COMMENT" =~ skip\ build\ ([^\ ]+) ]]; then
-            ARGS+=" --skip-build ${BASH_REMATCH[1]}"
-          fi
-
-          echo "update_script_args='$ARGS'" >> $GITHUB_OUTPUT
 
       - name: Get PR HEAD ref
         id: pr-head-ref
