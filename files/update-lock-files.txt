@@ -3,3 +3,4 @@ Test for update-lock-files.yaml
 python build_tools/update_environments_and_lock_files.py--select-tag "main-ci"
 python build_tools/update_environments_and_lock_files.py --select-tag "main-ci" --skip-build "doc_min_dependencies"
 python build_tools/update_environments_and_lock_files.py --select-tag "scipy-dev" --select-build "doc" --skip-build "doc_min_dependencies"
+python build_tools/update_environments_and_lock_files.py
