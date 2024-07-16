@@ -29,7 +29,7 @@ jobs:
             ARGS+=" --skip-build ${BASH_REMATCH[1]}"
           fi
 
-          echo "update_script_args=$ARGS" >> $GITHUB_OUTPUT
+          echo "update_script_args='$ARGS'" >> $GITHUB_OUTPUT
 
       - name: Get PR HEAD ref
         id: pr-head-ref
