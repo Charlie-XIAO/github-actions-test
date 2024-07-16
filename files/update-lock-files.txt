@@ -10,3 +10,4 @@ python build_tools/update_environments_and_lock_files.py
 python build_tools/update_environments_and_lock_files.py
 python build_tools/update_environments_and_lock_files.py
 python build_tools/update_environments_and_lock_files.py
+python build_tools/update_environments_and_lock_files.py
