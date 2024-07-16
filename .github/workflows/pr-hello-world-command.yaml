@@ -7,7 +7,7 @@ jobs:
   hello-world:
     if: >-
       github.event.issue.pull_request
-      && startsWith(github.event.comment.body, "/hello-world")
+      && startsWith(github.event.comment.body, '/hello-world')
     runs-on: ubuntu-latest
 
     steps:
