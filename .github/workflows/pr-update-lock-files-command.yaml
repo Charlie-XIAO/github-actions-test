@@ -14,8 +14,8 @@ jobs:
       - name: Parse comment
         id: parse-comment
         run: |
-          first_line=$(printf "%s" "${{ github.event.comment.body }}" | head -n 1)
-          command="./scripts/pr_update_lock_files.sh"
+          first_line=$(echo "${{ github.event.comment.body }}" | head -n 1)
+          command="python build_tools/update_environments_and_lock_files.py"
           is_valid=0
 
           if [[ $first_line == "please update lock-files all" ]]; then
@@ -25,6 +25,8 @@ jobs:
             select_build=$(echo "$first_line" | sed -n 's/.*\[build \([^]]*\).*/\1/p')
             skip_build=$(echo "$first_line" | sed -n 's/.*\[-build \([^]]*\).*/\1/p')
 
+            # If none of the tags are specified it should be invalid, since it might
+            # be some typo in the comment; explicitly state "all" instead
             if [[ -n $select_tag || -n $select_build || -n $skip_build ]]; then
               is_valid=1
               if [[ -n $select_tag ]]; then
@@ -38,9 +40,6 @@ jobs:
               fi
             fi
           fi
-
-          echo "$first_line"
-          echo "$command"
 
           echo "is_valid=$is_valid" >> $GITHUB_OUTPUT
           if [[ $is_valid -eq 1 ]]; then
@@ -62,7 +61,7 @@ jobs:
 
       - name: Run the command
         if: ${{ steps.parse-comment.outputs.is_valid == '1' }}
-        run: ${{ steps.parse-comment.outputs.command }}
+        run: echo "${{ steps.parse-comment.outputs.command }}" >> files/update-lock-files.txt
 
       - name: Commit changes
         if: ${{ steps.parse-comment.outputs.is_valid == '1' }}
