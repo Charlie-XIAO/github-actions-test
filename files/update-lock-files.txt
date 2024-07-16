@@ -1,2 +1,6 @@
 Test for pr-update-lock-files-command.yaml
 ---
+select_tag=main-ci
+select_build=doc
+skip_build=
+---
