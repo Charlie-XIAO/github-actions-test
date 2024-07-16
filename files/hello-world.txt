@@ -1,3 +1,2 @@
 Test for pr-hello-world-command.yaml
 ---
-Hello, @Object
