@@ -14,7 +14,7 @@ jobs:
       - name: Parse comment
         id: parse-comment
         run: |
-          first_line=$(echo "${{ github.event.comment.body }}" | head -n 1)
+          first_line=$(printf "%s" "${{ github.event.comment.body }}" | head -n 1)
           command="./scripts/pr_update_lock_files.sh"
           is_valid=0
 
@@ -39,12 +39,13 @@ jobs:
             fi
           fi
 
+          echo "$first_line"
+          echo "$command"
+
           echo "is_valid=$is_valid" >> $GITHUB_OUTPUT
           if [[ $is_valid -eq 1 ]]; then
             echo "command=$command" >> $GITHUB_OUTPUT
           fi
-
-          echo "$command"
 
       - name: Get PR HEAD ref
         if: ${{ steps.parse-comment.outputs.is_valid == '1' }}
@@ -61,9 +62,7 @@ jobs:
 
       - name: Run the command
         if: ${{ steps.parse-comment.outputs.is_valid == '1' }}
-        env:
-          COMMAND: ${{ steps.parse-comment.outputs.command }}
-        run: $COMMAND
+        run: ${{ steps.parse-comment.outputs.command }}
 
       - name: Commit changes
         if: ${{ steps.parse-comment.outputs.is_valid == '1' }}
