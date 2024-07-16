@@ -59,7 +59,9 @@ jobs:
 
       - name: Run the command
         if: ${{ steps.parse-comment.outputs.is_valid == '1' }}
-        run: ${{ steps.parse-comment.outputs.command }}
+        run: |
+          chmod +x ./scripts/pr_update_lock_files.sh
+          ${{ steps.parse-comment.outputs.command }}
 
       - name: Commit changes
         if: ${{ steps.parse-comment.outputs.is_valid == '1' }}
