@@ -1,2 +1,3 @@
 Test for pr-update-lock-files-command.yaml
 ---
+python build_tools/update_environments_and_lock_files.py
