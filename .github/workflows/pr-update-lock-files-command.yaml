@@ -18,15 +18,15 @@ jobs:
           ARGS=""
 
           if [[ "$COMMENT" =~ for\ tag\ ([^\ ]+) ]]; then
-            ARGS+="--select-tag $(BASH_REMATCH[1])"
+            ARGS+=" --select-tag ${BASH_REMATCH[1]}"
           fi
 
           if [[ "$COMMENT" =~ for\ build\ ([^\ ]+) ]]; then
-            ARGS+="--select-build $(BASH_REMATCH[1])"
+            ARGS+=" --select-build ${BASH_REMATCH[1]}"
           fi
 
           if [[ "$COMMENT" =~ skip\ build\ ([^\ ]+) ]]; then
-            ARGS+="--skip-build $(BASH_REMATCH[1])"
+            ARGS+=" --skip-build ${BASH_REMATCH[1]}"
           fi
 
           echo "update_script_args=$ARGS" >> $GITHUB_OUTPUT
@@ -43,7 +43,7 @@ jobs:
           ref: ${{ steps.pr-head-ref.outputs.pr_head_ref }}
 
       - name: Append the command name
-        run: echo "python build_tools/update_environments_and_lock_files.py ${{ steps.parse-comment.outputs.update_script_args }}" >> files/update-lock-files.txt
+        run: echo "python build_tools/update_environments_and_lock_files.py${{ steps.parse-comment.outputs.update_script_args }}" >> files/update-lock-files.txt
 
       - name: Commit changes
         run: |
