@@ -1,0 +1,54 @@
+name: pr-update-lock-files-command
+on:
+  issue_comment:
+    types: [created, edited]
+
+jobs:
+  update-lock-files:
+    if: >-
+      github.event.issue.pull_request
+      && startsWith(github.event.comment.body, 'please update lock-files')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Parse comment
+        id: parse-comment
+        run: |
+          COMMENT="${{ github.event.comment.body }}"
+          ARGS=""
+
+          if [[ "$COMMENT" =~ for\ tag\ ([^\ ]+) ]]; then
+            ARGS+="--select-tag $(BASH_REMATCH[1])"
+          fi
+
+          if [[ "$COMMENT" =~ for\ build\ ([^\ ]+) ]]; then
+            ARGS+="--select-build $(BASH_REMATCH[1])"
+          fi
+
+          if [[ "$COMMENT" =~ skip\ build\ ([^\ ]+) ]]; then
+            ARGS+="--skip-build $(BASH_REMATCH[1])"
+          fi
+
+          echo "update_script_args=$ARGS" >> $GITHUB_OUTPUT
+
+      - name: Get PR HEAD ref
+        id: pr-head-ref
+        run: echo "pr_head_ref=$(gh pr view ${{ github.event.issue.number }} --repo ${{ github.repository }} --json headRefName | jq -r '.headRefName')" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check out the code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.pr-head-ref.outputs.pr_head_ref }}
+
+      - name: Append the command name
+        run: echo "python build_tools/update_environments_and_lock_files.py ${{ steps.parse-comment.outputs.update_script_args }}" >> files/update-lock-files.txt
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "actions-bot"
+          git config --global user.email "58130806+actions-bot@users.noreply.github.com"
+          git add -A
+          git commit -m "[pr-update-lock-files-command] Requested update with args: ${{ steps.parse-comment.outputs.update_script_args }}"
+          git push
