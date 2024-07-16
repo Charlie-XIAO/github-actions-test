@@ -15,11 +15,21 @@ jobs:
         id: parse-comment
         run: |
           first_line=$(echo "${{ github.event.comment.body }}" | head -n 1)
-          if [[ "$first_line" =~ ^please\ update\ lock-files\ (.+)$ ]]; then
-            echo "update_script_args=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
-          else
-            echo "update_script_args=" >> $GITHUB_OUTPUT
+          args=""
+
+          if [[ "$first_line" =~ for\ tag\ (.+) ]]; then
+            args+=" --select-tag ${BASH_REMATCH[1]}"
           fi
+
+          if [[ "$first_line" =~ for\ build\ (.+) ]]; then
+            args+=" --select-build ${BASH_REMATCH[1]}"
+          fi
+
+          if [[ "$first_line" =~ except\ build\ (.+) ]]; then
+            args+=" --select-environment ${BASH_REMATCH[1]}"
+          fi
+
+          echo "update_script_args=$args" >> $GITHUB_OUTPUT
 
       - name: Get PR HEAD ref
         id: pr-head-ref
