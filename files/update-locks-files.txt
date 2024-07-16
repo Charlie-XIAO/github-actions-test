@@ -1,2 +1,0 @@
-Test for pr-update-lock-files-command.yaml
----
