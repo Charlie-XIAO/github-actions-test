@@ -23,7 +23,7 @@ jobs:
           ref: ${{ steps.pr-head-ref.outputs.pr_head_ref }}
 
       - name: Append hello world
-        run: echo "Hello, @${{ github.event.sender }}" >> files/hello-world.txt
+        run: echo "Hello, @${{ github.event.sender.login }}" >> files/hello-world.txt
 
       - name: Commit changes
         run: |
