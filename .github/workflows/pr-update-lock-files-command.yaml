@@ -15,7 +15,7 @@ jobs:
         id: parse-comment
         run: |
           first_line=$(echo "${{ github.event.comment.body }}" | head -n 1)
-          command="python build_tools/update_environments_and_lock_files.py"
+          command="./scripts/pr_update_lock_files.sh"
           is_valid=0
 
           if [[ $first_line == "please update lock-files all" ]]; then
@@ -57,9 +57,9 @@ jobs:
         with:
           ref: ${{ steps.pr-head-ref.outputs.pr_head_ref }}
 
-      - name: Append the command name
+      - name: Run the command
         if: ${{ steps.parse-comment.outputs.is_valid == '1' }}
-        run: echo "${{ steps.parse-comment.outputs.command }}" >> files/update-lock-files.txt
+        run: ${{ steps.parse-comment.outputs.command }}"
 
       - name: Commit changes
         if: ${{ steps.parse-comment.outputs.is_valid == '1' }}
