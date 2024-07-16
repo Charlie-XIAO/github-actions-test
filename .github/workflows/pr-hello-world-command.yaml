@@ -11,13 +11,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Get PR HEAD ref
+        id: pr-head-ref
+        run: echo "pr_head_ref=$(gh pr view ${{ github.event.issue.number }} --repo ${{ github.repository }} --json headRefName | jq -r '.headRefName')" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Check out the code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.issue.pull_request.head.sha }}
+          ref: ${{ steps.pr-head-ref.outputs.pr_head_ref }}
 
       - name: Append hello world
-        run: echo "Hello, @${{ github.event.sender }}" >> hello-world.txt
+        run: echo "Hello, @${{ github.event.sender }}" >> files/hello-world.txt
 
       - name: Commit changes
         run: |
