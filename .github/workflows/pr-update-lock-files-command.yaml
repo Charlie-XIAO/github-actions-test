@@ -3,9 +3,9 @@ on:
   issue_comment:
     types: [created]
 
-permissions:
-  contents: write
-  pull-requests: write
+# permissions:
+#   contents: write
+#   pull-requests: write
 
 jobs:
   update-lock-files:
@@ -37,7 +37,7 @@ jobs:
           pr_head_ref=$(echo "$pr_info" | jq -r '.headRefName')
           pr_head_repository=$(echo "$pr_info" | jq -r '.headRepositoryOwner.login + "/" + .headRepository.name')
           echo "pr_head_ref=$pr_head_ref" >> $GITHUB_OUTPUT
-          echo "pre_head_repository=$pr_head_repository" >> $GITHUB_OUTPUT
+          echo "pr_head_repository=$pr_head_repository" >> $GITHUB_OUTPUT
 
       - name: Check out the code
         uses: actions/checkout@v4
