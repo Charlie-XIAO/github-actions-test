@@ -24,16 +24,22 @@ jobs:
           fi
           echo "args=$args" >> $GITHUB_OUTPUT
 
-      - name: Get PR HEAD ref
-        id: pr-head-ref
-        run: echo "pr_head_ref=$(gh pr view ${{ github.event.issue.number }} --repo ${{ github.repository }} --json headRefName | jq -r '.headRefName')" >> $GITHUB_OUTPUT
+      - name: Get PR HEAD information
+        id: pr-head-info
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pr_info=$(gh pr view ${{ github.event.issue.number }} --repo ${{ github.repository }} --json headRefName,headRepository,headRepositoryOwner)
+          pr_head_ref=$(echo "$pr_info" | jq -r '.headRefName')
+          pr_head_repository=$(echo "$pr_info" | jq -r '.headRepositoryOwner.login + "/" + .headRepository.name')
+          echo "pr_head_ref=$pr_head_ref" >> $GITHUB_OUTPUT
+          echo "pre_head_repository=$pr_head_repository" >> $GITHUB_OUTPUT
 
       - name: Check out the code
         uses: actions/checkout@v4
         with:
-          ref: ${{ steps.pr-head-ref.outputs.pr_head_ref }}
+          ref: ${{ steps.pr-head-info.outputs.pr_head_ref }}
+          repository: ${{ steps.pr-head-info.outputs.pr_head_repository }}
 
       - name: Run the command
         run: echo "python build_tools/update_environments_and_lock_files.py${{ steps.parse-comment.outputs.args }}" >> files/update-lock-files.txt
