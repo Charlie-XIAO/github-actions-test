@@ -37,7 +37,7 @@ jobs:
 
       - name: Commit changes
         run: |
-          args=${{ steps.parse-comment.outputs.args }}
+          args="${{ steps.parse-comment.outputs.args }}"
           selected_tag=""
           if [[ $args == *"--select-tag "* ]]; then
             selected_tag=${args#*--select-tag }
