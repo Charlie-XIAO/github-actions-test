@@ -18,7 +18,10 @@ jobs:
         run: |
           prefix="@scikit-learn-bot update lock-files"
           first_line=$(echo "$COMMENT" | head -n 1)
-          args=$(echo "$first_line#$prefix")
+          args=""
+          if [[ "$first_line" == "$prefix"* ]]; then  # Always true
+            args="${first_line#$prefix}"
+          fi
           echo "args=$args" >> $GITHUB_OUTPUT
 
       - name: Get PR HEAD ref
