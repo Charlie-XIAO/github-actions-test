@@ -1,3 +1,4 @@
 Test for pr-update-lock-files-command.yaml
 ---
 python build_tools/update_environments_and_lock_files.py
+python build_tools/update_environments_and_lock_files.py --select-build doc --skip-build doc_min_dependencies
