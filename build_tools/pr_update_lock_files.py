@@ -10,7 +10,7 @@ def execute_command(command):
 
 
 def main():
-    comment = os.environ["COMMENT"]
+    comment = os.environ["COMMENT"].splitlines()[0].strip()
 
     # Extract the command-line arguments from the comment
     prefix = "@scikit-learn-bot update lock-files"
