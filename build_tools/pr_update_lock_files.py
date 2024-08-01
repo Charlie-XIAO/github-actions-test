@@ -25,25 +25,18 @@ def main():
 
     # Determine the marker to add in the commit message (if any)
     marker = ""
-    print(f"Marker: {marker}")
     if args.commit_marker is not None:
         marker += args.commit_marker + " "
-        print(f"Marker: {marker}")
     # Additional markers based on the tag
     if args.select_tag == "main-ci":
         marker += "[doc build] "
-        print(f"Marker: {marker}")
     elif args.select_tag == "scipy-dev":
         marker += "[scipy-dev] "
-        print(f"Marker: {marker}")
     elif args.select_tag == "arm":
         marker += "[cirrus arm] "
-        print(f"Marker: {marker}")
     elif args_string.strip() == "":
         # No arguments which will update all lock files so add all markers
         marker += "[doc build] [scipy-dev] [cirrus arm] "
-        print(f"Marker: {marker}")
-    print(f"Marker: {marker}")
 
     execute_command(f"python build_tools/pr_update_lock_files_helper.py{args_string}")
     execute_command('git config --global user.name "scikit-learn-bot"')
