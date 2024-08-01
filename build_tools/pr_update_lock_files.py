@@ -5,6 +5,7 @@ import subprocess
 
 
 def execute_command(command):
+    print(f"$ {command}")
     command_list = shlex.split(command)
     subprocess.run(command_list, check=True, text=True)
 
