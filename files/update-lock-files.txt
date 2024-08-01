@@ -1,0 +1,1 @@
+select_build='doc', skip_build='doc_min_dependencies', select_tag=None
