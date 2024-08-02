@@ -2,3 +2,4 @@ select_build='doc', skip_build='doc_min_dependencies', select_tag=None
 select_build='', skip_build='doc', select_tag='main-ci'
 select_build='', skip_build=None, select_tag=None
 select_build='doc', skip_build=None, select_tag=None
+select_build='', skip_build=None, select_tag='scipy-dev'
