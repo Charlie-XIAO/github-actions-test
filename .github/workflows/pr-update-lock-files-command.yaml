@@ -42,4 +42,3 @@ jobs:
         run: |
           pip install click
           python build_tools/pr_update_lock_files.py
-          echo "I'm doing something malicious in the workflow file..."
