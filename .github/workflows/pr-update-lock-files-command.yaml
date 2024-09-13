@@ -70,7 +70,7 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             /repos/${{ github.repository }}/statuses/${{ steps.pr-head-info.outputs.pr_head_sha }} \
-            -f "state=${{ job.status == 'success' && 'success' || 'failure' }}" \
+            -f "state=${{ job.status == 'success' && 'success' || 'error' }}" \
             -f "target_url=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
-            -f "description=Updating lock files..." \
+            -f "description=Lock files ${{ job.status == 'success' && 'updated' || 'failed to update' }}" \
             -f "context=pr-update-lock-files"
