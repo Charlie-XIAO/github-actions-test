@@ -24,6 +24,7 @@ jobs:
           pr_head_sha=$(echo "$pr_info" | jq -r '.headRefOid')
           pr_head_repository=$(echo "$pr_info" | jq -r '.headRepositoryOwner.login + "/" + .headRepository.name')
           echo "pr_head_ref=$pr_head_ref" >> $GITHUB_OUTPUT
+          echo "pr_head_sha=$pr_head_sha" >> $GITHUB_OUTPUT
           echo "pr_head_repository=$pr_head_repository" >> $GITHUB_OUTPUT
 
       - name: Set pending status
