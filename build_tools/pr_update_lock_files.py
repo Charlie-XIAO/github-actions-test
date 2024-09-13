@@ -2,6 +2,7 @@ import argparse
 import os
 import shlex
 import subprocess
+import time
 
 
 def execute_command(command):
@@ -11,6 +12,9 @@ def execute_command(command):
 
 def main():
     comment = os.environ["COMMENT"].splitlines()[0].strip()
+
+    # Otherwise the action finishes too quickly and the progress is hard to observe
+    time.sleep(20)
 
     # Extract the command-line arguments from the comment
     prefix = "@scikit-learn-bot update lock-files"
